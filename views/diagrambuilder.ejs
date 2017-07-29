@@ -100,7 +100,7 @@
             </div>
 
         </div>
-        
+
         <!-- /.col-md-4 -->
 
         <!-- /.row -->
@@ -200,18 +200,18 @@
             $('input[type=radio][name=sysCB]').change(function() {
                 var sysid = parseInt($('input[name=sysCB]:checked')[0].id);
                 var projorpol = ($('input:radio[name="projorpol"]:checked').val()) ? $('input:radio[name="projorpol"]:checked').val() : 'project';
-                
+
                 for (var k = 0; k < systems.length; k++) {
 
                     var cursys = systems[k];
                     var cursyscolor = cursys.syscolor;
                     if (cursys.id === sysid) {
-                               if (projorpol == 'project') {
-                    var fillColor = cursyscolor;
-                } else { // it is policy
-                    var fillPattern = setSVGStyle(cursyscolor);
-                    var fillColor = fillPattern;
-                }
+                        if (projorpol == 'project') {
+                            var fillColor = cursyscolor;
+                        } else { // it is policy
+                            var fillPattern = setSVGStyle(cursyscolor);
+                            var fillColor = fillPattern;
+                        }
                         drawnItems.setStyle({
                             'color': cursyscolor,
                             'fillColor': fillColor
@@ -228,17 +228,17 @@
 
                 var sysid = parseInt($('input[name=sysCB]:checked')[0].id);
                 var projorpol = ($('input:radio[name="projorpol"]:checked').val()) ? $('input:radio[name="projorpol"]:checked').val() : 'project';
-                
+
                 for (var k = 0; k < systems.length; k++) {
                     var cursys = systems[k];
                     var cursyscolor = cursys.syscolor;
                     if (cursys.id === sysid) {
-                               if (projorpol == 'project') {
-                    var fillColor = cursyscolor;
-                } else { // it is policy
-                    var fillPattern = setSVGStyle(cursyscolor);
-                    var fillColor = fillPattern;
-                }
+                        if (projorpol == 'project') {
+                            var fillColor = cursyscolor;
+                        } else { // it is policy
+                            var fillPattern = setSVGStyle(cursyscolor);
+                            var fillColor = fillPattern;
+                        }
                         drawnItems.setStyle({
                             'color': cursyscolor,
                             'fillColor': fillColor
@@ -339,18 +339,18 @@
                 var layer = event.layer;
                 drawnItems.addLayer(layer);
                 layer.showMeasurements();
-                var sysid = ($('input[name=sysCB]:checked')[0])?(parseInt($('input[name=sysCB]:checked')[0].id)):0;
+                var sysid = ($('input[name=sysCB]:checked')[0]) ? (parseInt($('input[name=sysCB]:checked')[0].id)) : 0;
                 var projorpol = ($('input:radio[name="projorpol"]:checked').val()) ? $('input:radio[name="projorpol"]:checked').val() : 'project';
                 for (var k = 0; k < systems.length; k++) {
                     var cursys = systems[k];
                     var cursyscolor = cursys.syscolor;
                     if (cursys.id === sysid) {
-                               if (projorpol == 'project') {
-                    var fillColor = cursyscolor;
-                } else { // it is policy
-                    var fillPattern = setSVGStyle(cursyscolor);
-                    var fillColor = fillPattern;
-                }
+                        if (projorpol == 'project') {
+                            var fillColor = cursyscolor;
+                        } else { // it is policy
+                            var fillPattern = setSVGStyle(cursyscolor);
+                            var fillColor = fillPattern;
+                        }
                         drawnItems.setStyle({
                             'color': cursyscolor,
                             'fillColor': fillColor
@@ -367,7 +367,7 @@
                 maxZoom: 18,
             }).addTo(inputmap);
             inputmap.fitBounds(mb);
-            
+
             bindRadioChangeBtn();
             bindRadioChangeBtnProjPol();
         }
@@ -424,16 +424,16 @@
                 targetsysid = false;
             }
             var diagname = $("#newDiagName").val();
-             opGJ = drawnItems.toGeoJSON();
+            opGJ = drawnItems.toGeoJSON();
             if (projorpol && targetsysid && opGJ.features.length > 0 && diagname) {
-               
+
                 var opFeatLen = opGJ.features.length;
-                if (opFeatLen >0){
-                for (var l = 0; l < opFeatLen; l++) {
-                    opGJ.features[l].properties = {};
-                }
-                validated = true;
-                } else{
+                if (opFeatLen > 0) {
+                    for (var l = 0; l < opFeatLen; l++) {
+                        opGJ.features[l].properties = {};
+                    }
+                    validated = true;
+                } else {
                     validated = false;
                 }
             }
@@ -447,31 +447,30 @@
                     'gj': JSON.stringify(opGJ),
                     '_csrf': '<%= csrfToken %>'
                 };
-                console.log(data);
+                // console.log(data);
                 //your awesome code here
-                // var url = '/adddiagram/';
-                // var promise = $.ajax({
-                //     url: url,
-                //     type: 'POST',
-                //     data: data
-                // });
-                // promise.done(function(data) {
+                var url = '/adddiagram/';
+                var promise = $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: data
+                });
+                promise.done(function(data) {
+                    drawnItems.clearLayer();
+                    humane.log(data.body.status, {
+                        addnCls: 'humane-flatty-success'
+                    });
+                    $("#newDiagName").val("");
+                    $('input[name="sysCB"]').prop('checked', false);
+                    $('input[name="projorpol"]').prop('checked', false);
+                });
 
-                //     humane.log(data.body.status, {
-                //         addnCls: 'humane-flatty-success'
-                //     });
-                //     $("#newDiagName").val("");
-                //     $('input[name="sysCB"]').prop('checked', false);
-                //     $('input[name="projorpol"]').prop('checked', false);
-                // });
-
-                // promise.fail(function(data) {
-                //     humane.log("Error in adding diagram.", {
-                //         addnCls: 'humane-flatty-error'
-                //     });
-                // });
-            } 
-            else {
+                promise.fail(function(data) {
+                    humane.log("Error in adding diagram.", {
+                        addnCls: 'humane-flatty-error'
+                    });
+                });
+            } else {
                 humane.log("Please some features, enter target system, project / policy and diagram name.", {
                     addnCls: 'humane-flatty-error'
                 });
